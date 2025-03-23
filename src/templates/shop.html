@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <title>ReTech - Shop</title>
+  <link rel="icon" type="image/x-icon" href="/src/static/favicon.ico">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {}
+      }
+    }
+  </script>
+  <style>
+    .green-dot {
+      color: #88d889;
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+    
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    .product-card {
+      backdrop-filter: blur(10px);
+      background-color: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(136, 216, 137, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(136, 216, 137, 0.1);
+    }
+    
+    body {
+      background: white;
+      min-height: 100vh;
+    }
+    
+    .sidebar {
+      width: 64px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      top: 56px; /* Height of header */
+      z-index: 999;
+      background-color: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(12px);
+      border-radius: 0 12px 12px 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .sidebar:hover {
+      width: 240px;
+    }
+
+    .sidebar a {
+      padding: 0.75rem;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .sidebar a:hover {
+      background-color: rgba(136, 216, 137, 0.1);
+    }
+
+    .sidebar:not(:hover) {
+      width: 64px;
+    }
+
+    .sidebar:not(:hover) a {
+      justify-content: center;
+      padding: 0.75rem 0;
+    }
+
+    .sidebar:not(:hover) .nav-text {
+      opacity: 0;
+      transform: translateX(-10px);
+      width: 0;
+      margin: 0;
+    }
+
+    .nav-text {
+      transition: all 0.3s ease;
+      opacity: 1;
+      transform: translateX(0);
+      margin-left: 12px;
+      width: auto;
+    }
+
+    .sidebar li {
+      margin-bottom: 0.75rem;
+      padding: 0 0.75rem;
+    }
+
+    .sidebar svg {
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+    }
+    
+    .container {
+      max-width: 1600px !important;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    
+    .logo-text {
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+    
+    .profile-popup {
+      display: block;
+      position: absolute;
+      left: 100%;
+      top: 0;
+      width: 200px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      margin-left: 8px;
+    }
+
+    .profile-menu-trigger:hover .profile-popup {
+      display: block;
+    }
+
+    .search-bar {
+      padding: 0.5rem 0.75rem 0.5rem 2rem;
+      border-radius: 0.5rem;
+      outline: none;
+      width: 200px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(136, 216, 137, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .search-bar:focus {
+      width: 300px;
+      border-color: #88d889;
+      box-shadow: 0 0 0 2px rgba(136, 216, 137, 0.1);
+      background-color: rgba(255, 255, 255, 1);
+    }
+
+    .dark .search-bar {
+      background-color: rgba(31, 41, 55, 0.8);
+      border-color: rgba(75, 85, 99, 0.4);
+      color: white;
+    }
+
+    .dark .search-bar:focus {
+      background-color: rgba(31, 41, 55, 1);
+      border-color: #88d889;
+    }
+
+    .dark .search-bar::placeholder {
+      color: #9ca3af;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6b7280;
+    }
+
+    .dark .search-icon {
+      color: #9ca3af;
+    }
+
+    /* Custom Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(136, 216, 137, 0.3);
+      border-radius: 10px;
+      border: 2px solid transparent;
+      background-clip: content-box;
+      transition: all 0.3s ease;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(136, 216, 137, 0.5);
+      border: 2px solid transparent;
+      background-clip: content-box;
+    }
+
+    /* Dark mode scrollbar */
+    .dark ::-webkit-scrollbar-track {
+      background: rgba(31, 41, 55, 0.4);
+    }
+
+    .dark ::-webkit-scrollbar-thumb {
+      background: rgba(136, 216, 137, 0.2);
+      border: 2px solid transparent;
+      background-clip: content-box;
+    }
+
+    .dark ::-webkit-scrollbar-thumb:hover {
+      background: rgba(136, 216, 137, 0.4);
+      border: 2px solid transparent;
+      background-clip: content-box;
+    }
+
+    /* Hide scrollbar when not scrolling */
+    ::-webkit-scrollbar {
+      width: 10px;
+      background: transparent;
+    }
+
+    /* Firefox scrollbar */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(136, 216, 137, 0.3) transparent;
+    }
+
+    .dark * {
+      scrollbar-color: rgba(136, 216, 137, 0.2) rgba(31, 41, 55, 0.4);
+    }
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    * {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+  </style>
+</head>
+<body class="bg-white dark:bg-gray-900 transition-colors duration-200 text-gray-800 dark:text-white">
+  <!-- Header -->
+  <header class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm fixed top-0 w-full z-50 border-b dark:border-gray-700/50 border-[#88d889]/50 h-14">
+    <div class="container mx-auto h-full px-2 flex justify-between items-center">
+      <div class="flex items-center">
+        <h1 class="text-3xl font-bold tracking-wider pl-2">
+          <span class="logo-text">ReTech</span><span class="green-dot">.</span>
+        </h1>
+      </div>
+      <div class="flex items-center space-x-4">
+        <div class="relative">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input type="text" placeholder="Search products..." class="search-bar text-sm">
+        </div>
+        <button id="theme-toggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" onclick="toggleDarkMode()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800 dark:text-white block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800 dark:text-white hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar fixed left-0 h-[calc(100vh-56px)] bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-r dark:border-gray-700/50 border-[#88d889]/50 z-40 pt-8 px-2 hover:shadow-lg overflow-visible w-16 hover:w-[240px] transition-all duration-300">
+    <ul class="space-y-6">
+      <li>
+        <a href="/" class="hover:text-[#88d889] transition-colors group flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0 stroke-gray-800 dark:stroke-white" viewBox="0 0 24 24" fill="none">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+          </svg>
+          <span class="nav-text ml-3 whitespace-nowrap transition-all duration-300">Home</span>
+        </a>
+      </li>
+      <li>
+        <a href="/shop" class="hover:text-[#88d889] transition-colors group flex items-center">
+          <i class="fa-solid fa-store h-6 w-6 flex-shrink-0 text-gray-800 dark:text-white"></i>
+          <span class="nav-text ml-3 whitespace-nowrap transition-all duration-300">Shop</span>
+        </a>
+      </li>
+      <li class="relative group/profile">
+        <a href="#" class="hover:text-[#88d889] transition-colors group flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0 stroke-gray-800 dark:stroke-white" viewBox="0 0 24 24" fill="none">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+          <span class="nav-text ml-3 whitespace-nowrap transition-all duration-300">Profile</span>
+        </a>
+        <!-- Profile Dropdown -->
+        <div class="fixed left-[4rem] top-[6.5rem] w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-[#88d889]/20 dark:border-gray-700 opacity-0 invisible group-hover/profile:opacity-100 group-hover/profile:visible transition-all duration-300 z-[999] hover:opacity-100 hover:visible p-6">
+          <!-- Profile Header -->
+          <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Profile Picture" class="w-12 h-12 rounded-full border-2 border-[#88d889]">
+              <div class="ml-3">
+                <h4 class="font-semibold text-gray-800 dark:text-white">USER</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">user@example.com</p>
+              </div>
+            </div>
+          </div>
+          <!-- Menu Items -->
+          <div class="py-2">
+            <a href="/orders" class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-center group">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              <span class="text-gray-800 dark:text-white">Orders</span>
+            </a>
+            <a href="/settings" class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-center group">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+              </svg>
+              <span class="text-gray-800 dark:text-white">Settings</span>
+            </a>
+            <a href="/rewards" class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-center group">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span class="text-gray-800 dark:text-white">Rewards</span>
+            </a>
+            <div class="border-t border-gray-200 dark:border-gray-700 my-2"></div>
+            <a href="/logout" class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-center group text-red-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              <span>Logout</span>
+            </a>
+          </div>
+        </div>
+      </li>
+      <li class="relative group/eco">
+        <a href="#" class="hover:text-[#88d889] transition-colors group flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0 stroke-gray-800 dark:stroke-white" viewBox="0 0 24 24" fill="none">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2C7 2 4 6 4 10c0 4 2.5 8 8 10 5.5-2 8-6 8-10 0-4-3-8-8-8zM12 2c2 4 3 8 0 12M12 14c-2 2-4 4-6 6" />
+          </svg>
+          <span class="nav-text ml-3 whitespace-nowrap transition-all duration-300">Eco Tracker</span>
+        </a>
+        <!-- Eco Meter Popup -->
+        <div class="fixed left-[4rem] top-[12rem] w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-[#88d889]/20 dark:border-gray-700 opacity-0 invisible group-hover/eco:opacity-100 group-hover/eco:visible transition-all duration-300 z-[999] hover:opacity-100 hover:visible p-6">
+          <div class="text-center mb-4">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Eco Score</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Your environmental impact</p>
+          </div>
+          <!-- Circular Meter -->
+          <div class="relative w-56 h-56 mx-auto">
+            <!-- Background Circle -->
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+              <!-- Single circle with thicker stroke -->
+              <circle class="text-gray-200 dark:text-gray-700" stroke="currentColor" stroke-width="8" fill="none" cx="50" cy="50" r="42"/>
+              <!-- Progress Circle -->
+              <circle class="text-[#88d889] transition-all duration-1000" stroke="currentColor" stroke-width="8" stroke-linecap="round" fill="none"
+                cx="50" cy="50" r="42" stroke-dasharray="263.89" stroke-dashoffset="65.97"/>
+            </svg>
+            <!-- Center Content -->
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-[#88d889] mb-2" viewBox="0 0 24 24" fill="none">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2C7 2 4 6 4 10c0 4 2.5 8 8 10 5.5-2 8-6 8-10 0-4-3-8-8-8zM12 2c2 4 3 8 0 12M12 14c-2 2-4 4-6 6" />
+              </svg>
+              <span class="text-4xl font-bold text-gray-800 dark:text-white">75%</span>
+              <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Eco Score</p>
+            </div>
+          </div>
+          <!-- Stats -->
+          <div class="mt-6 grid grid-cols-2 gap-4 text-center">
+            <div>
+              <p class="text-sm font-medium text-gray-600 dark:text-gray-400">CO₂ Saved</p>
+              <p class="text-lg font-semibold text-gray-800 dark:text-white">2.5 kg</p>
+            </div>
+            <div>
+              <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Trees Worth</p>
+              <p class="text-lg font-semibold text-gray-800 dark:text-white">3</p>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li>
+        <a href="/cart" class="group flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0 stroke-gray-800 dark:stroke-white group-hover:stroke-[#88d889] transition-colors" viewBox="0 0 24 24" fill="none">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+          </svg>
+          <span class="nav-text ml-3 whitespace-nowrap transition-all duration-300 group-hover:text-[#88d889] transition-colors">Shopping Bag</span>
+        </a>
+      </li>
+      <li>
+        <a href="/favourites" class="hover:text-[#88d889] transition-colors group flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0 stroke-gray-800 dark:stroke-white" viewBox="0 0 24 24" fill="none">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+          <span class="nav-text ml-3 whitespace-nowrap transition-all duration-300">Favourites</span>
+        </a>
+      </li>
+      <li class="relative group">
+        <a href="#" class="hover:text-[#88d889] transition-colors group flex items-center">
+          <i class="fa-solid fa-money-bills h-6 w-6 flex-shrink-0 text-gray-800 dark:text-white"></i>
+          <span class="nav-text ml-3 whitespace-nowrap transition-all duration-300">Sell</span>
+        </a>
+        
+        <!-- Sell Dropdown -->
+        <div class="hidden group-hover:block absolute left-[60px] top-0 ml-2 w-72 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+          <!-- Stats Section -->
+          <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+            <div class="text-center">
+              <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Products Sold</p>
+              <p class="text-2xl font-bold text-[#88d889]">24</p>
+            </div>
+          </div>
+          
+          <!-- Options Grid -->
+          <div class="grid grid-cols-2 gap-3 p-4">
+            <a href="/sell-history" class="flex flex-col items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-center group">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mb-2 text-gray-600 dark:text-gray-400 group-hover:text-[#88d889] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4m6 2l-4 4 2 2" />
+              </svg>
+              <span class="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-[#88d889] transition-colors">View History</span>
+            </a>
+            <a href="/sell" class="flex flex-col items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-center group">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mb-2 text-gray-600 dark:text-gray-400 group-hover:text-[#88d889] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+              <span class="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-[#88d889] transition-colors">New Listing</span>
+            </a>
+          </div>
+        </div>
+      </li>
+      <li>
+        <a href="#" class="hover:text-[#88d889] transition-colors group flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0 stroke-gray-800 dark:stroke-white" viewBox="0 0 24 24" fill="none">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+          <span class="nav-text ml-3 whitespace-nowrap transition-all duration-300">Flash Deals</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="pt-20 pl-24 pr-8 min-h-screen">
+    <!-- Flash Sale Banner -->
+    <div class="mb-6 bg-gradient-to-r from-[#88d889]/10 to-[#88d889]/20 rounded-lg p-4 border dark:border-gray-700 border-[#88d889]/20">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div>
+          <h2 class="text-lg font-bold mb-2">Weekend Flash Deals!</h2>
+          <p class="text-gray-600 dark:text-gray-400">Up to 50% off on selected items. Deals end in:</p>
+        </div>
+        <div class="flex space-x-3 mt-4 md:mt-0">
+          <div class="bg-white dark:bg-gray-800 px-3 py-2 rounded-lg shadow-sm">
+            <span class="text-xl font-bold">24</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400">hrs</span>
+          </div>
+          <div class="bg-white dark:bg-gray-800 px-3 py-2 rounded-lg shadow-sm">
+            <span class="text-xl font-bold">45</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400">min</span>
+          </div>
+          <div class="bg-white dark:bg-gray-800 px-3 py-2 rounded-lg shadow-sm">
+            <span class="text-xl font-bold">18</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400">sec</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Categories -->
+    <div class="mb-6">
+      <h2 class="text-lg font-bold mb-3 text-gray-800 dark:text-white">Browse Categories</h2>
+      <div class="flex space-x-3 overflow-x-auto pb-3 scrollbar-hide">
+        <button class="bg-[#88d889] text-white px-4 py-2 rounded-full whitespace-nowrap">
+          All Products
+        </button>
+        <button class="bg-[#88d889]/10 hover:bg-[#88d889]/20 text-[#88d889] px-4 py-2 rounded-full whitespace-nowrap">
+          Laptops
+        </button>
+        <button class="bg-[#88d889]/10 hover:bg-[#88d889]/20 text-[#88d889] px-4 py-2 rounded-full whitespace-nowrap">
+          Desktops
+        </button>
+        <button class="bg-[#88d889]/10 hover:bg-[#88d889]/20 text-[#88d889] px-4 py-2 rounded-full whitespace-nowrap">
+          Components
+        </button>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="mb-8">
+      <h2 class="text-lg font-bold mb-4 text-gray-800 dark:text-white">Featured Products</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Custom PC Build -->
+        <div class="product-card rounded-lg overflow-hidden h-[460px] flex flex-col border-2 dark:border-gray-700 border-gray-200 bg-white dark:bg-gray-800">
+          <div class="relative">
+            <span class="absolute top-2 right-2 bg-[#88d889] text-white text-xs font-bold px-2 py-1 rounded">-40%</span>
+            <img src="/src/images/Tower-Pc.png" alt="Custom Gaming PC" class="w-full h-56 object-contain p-4"/>
+          </div>
+          <div class="p-4 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="text-xs text-[#88d889] font-medium mb-1">Custom PC</div>
+              <h3 class="font-semibold mb-2 text-gray-800 dark:text-white">i7 12th gen with GeForce rtx3080 Custom PC</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400">High-End Gaming Desktop with RTX 3080</p>
+            </div>
+            <div class="flex justify-between items-center mt-4">
+              <div>
+                <span class="text-lg font-bold">₹89,999</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400 line-through ml-2">₹159,999</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AMD Ryzen 9 5950X -->
+        <div class="product-card rounded-lg overflow-hidden h-[460px] flex flex-col border-2 dark:border-gray-700 border-gray-200 bg-white dark:bg-gray-800">
+          <div class="relative">
+            <span class="absolute top-2 right-2 bg-[#88d889] text-white text-xs font-bold px-2 py-1 rounded">-15%</span>
+            <img src="/src/images/Amd-Ryzen-9-5950X-Processor.png" alt="AMD Ryzen 9 5950X" class="w-full h-56 object-contain p-4"/>
+          </div>
+          <div class="p-4 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="text-xs text-[#88d889] font-medium mb-1">AMD</div>
+              <h3 class="font-semibold mb-2 text-gray-800 dark:text-white">AMD Ryzen 9 5950X</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400">High-Performance Desktop Processor</p>
+            </div>
+            <div class="flex justify-between items-center mt-4">
+              <div>
+                <span class="text-lg font-bold">₹31,999</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400 line-through ml-2">₹37,999</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ASUS PRIME H610M-E -->
+        <div class="product-card rounded-lg overflow-hidden h-[460px] flex flex-col border-2 dark:border-gray-700 border-gray-200 bg-white dark:bg-gray-800">
+          <div class="relative">
+            <span class="absolute top-2 right-2 bg-[#88d889] text-white text-xs font-bold px-2 py-1 rounded">-10%</span>
+            <img src="/src/images/ASUS_PRIME_H610M-E_D4_MOTHERBOARD.png" alt="ASUS Motherboard" class="w-full h-56 object-contain p-4"/>
+          </div>
+          <div class="p-4 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="text-xs text-[#88d889] font-medium mb-1">ASUS</div>
+              <h3 class="font-semibold mb-2 text-gray-800 dark:text-white">ASUS PRIME H610M-E D4</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Intel LGA 1700 Motherboard</p>
+            </div>
+            <div class="flex justify-between items-center mt-4">
+              <div>
+                <span class="text-lg font-bold">₹8,499</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400 line-through ml-2">₹9,499</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cooler Master Sedion -->
+        <div class="product-card rounded-lg overflow-hidden h-[460px] flex flex-col border-2 dark:border-gray-700 border-gray-200 bg-white dark:bg-gray-800">
+          <div class="relative">
+            <span class="absolute top-2 right-2 bg-[#88d889] text-white text-xs font-bold px-2 py-1 rounded">-15%</span>
+            <img src="/src/images/Cooler-Master-Sedion-120V.png" alt="CPU Cooler" class="w-full h-56 object-contain p-4"/>
+          </div>
+          <div class="p-4 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="text-xs text-[#88d889] font-medium mb-1">Cooler Master</div>
+              <h3 class="font-semibold mb-2 text-gray-800 dark:text-white">Cooler Master Sedion 120V</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Liquid CPU Cooler</p>
+            </div>
+            <div class="flex justify-between items-center mt-4">
+              <div>
+                <span class="text-lg font-bold">₹5,999</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400 line-through ml-2">₹6,999</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Intel Pentium -->
+        <div class="product-card rounded-lg overflow-hidden h-[460px] flex flex-col border-2 dark:border-gray-700 border-gray-200 bg-white dark:bg-gray-800">
+          <div class="relative">
+            <span class="absolute top-2 right-2 bg-[#88d889] text-white text-xs font-bold px-2 py-1 rounded">-25%</span>
+            <img src="/src/images/IntelPentiumDualCore.png" alt="Intel CPU" class="w-full h-56 object-contain p-4"/>
+          </div>
+          <div class="p-4 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="text-xs text-[#88d889] font-medium mb-1">Intel</div>
+              <h3 class="font-semibold mb-2 text-gray-800 dark:text-white">Intel Pentium Dual Core</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Entry Level Desktop Processor</p>
+            </div>
+            <div class="flex justify-between items-center mt-4">
+              <div>
+                <span class="text-lg font-bold">₹3,749</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400 line-through ml-2">₹4,999</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Raspberry Pi 4 -->
+        <div class="product-card rounded-lg overflow-hidden h-[460px] flex flex-col border-2 dark:border-gray-700 border-gray-200 bg-white dark:bg-gray-800">
+          <div class="relative">
+            <span class="absolute top-2 right-2 bg-[#88d889] text-white text-xs font-bold px-2 py-1 rounded">-10%</span>
+            <img src="/src/images/Raspberry-Pi-4-Model-B-2GB-RAM.png" alt="Raspberry Pi 4" class="w-full h-56 object-contain p-4"/>
+          </div>
+          <div class="p-4 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="text-xs text-[#88d889] font-medium mb-1">Raspberry Pi</div>
+              <h3 class="font-semibold mb-2 text-gray-800 dark:text-white">Raspberry Pi 4 Model B</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400">2GB RAM Single Board Computer</p>
+            </div>
+            <div class="flex justify-between items-center mt-4">
+              <div>
+                <span class="text-lg font-bold">₹4,499</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400 line-through ml-2">₹4,999</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Raspberry Pi Zero 2W -->
+        <div class="product-card rounded-lg overflow-hidden h-[460px] flex flex-col border-2 dark:border-gray-700 border-gray-200 bg-white dark:bg-gray-800">
+          <div class="relative">
+            <span class="absolute top-2 right-2 bg-[#88d889] text-white text-xs font-bold px-2 py-1 rounded">-20%</span>
+            <img src="/src/images/Raspberry-Pi-Zero-2W.png" alt="Raspberry Pi Zero" class="w-full h-56 object-contain p-4"/>
+          </div>
+          <div class="p-4 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="text-xs text-[#88d889] font-medium mb-1">Raspberry Pi</div>
+              <h3 class="font-semibold mb-2 text-gray-800 dark:text-white">Raspberry Pi Zero 2W</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Compact Single Board Computer</p>
+            </div>
+            <div class="flex justify-between items-center mt-4">
+              <div>
+                <span class="text-lg font-bold">₹1,599</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400 line-through ml-2">₹1,999</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Samsung Monitor -->
+        <div class="product-card rounded-lg overflow-hidden h-[460px] flex flex-col border-2 dark:border-gray-700 border-gray-200 bg-white dark:bg-gray-800">
+          <div class="relative">
+            <span class="absolute top-2 right-2 bg-[#88d889] text-white text-xs font-bold px-2 py-1 rounded">-25%</span>
+            <img src="/src/images/Samsung-60Hz-22-inch-FHD-Flat-Monitor.png" alt="Samsung Monitor" class="w-full h-56 object-contain p-4"/>
+          </div>
+          <div class="p-4 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="text-xs text-[#88d889] font-medium mb-1">Samsung</div>
+              <h3 class="font-semibold mb-2 text-gray-800 dark:text-white">Samsung 22" Monitor</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400">60Hz FHD Flat Panel Display</p>
+            </div>
+            <div class="flex justify-between items-center mt-4">
+              <div>
+                <span class="text-lg font-bold">₹8,999</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400 line-through ml-2">₹11,999</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Samsung DDR3 RAM -->
+        <div class="product-card rounded-lg overflow-hidden h-[460px] flex flex-col border-2 dark:border-gray-700 border-gray-200 bg-white dark:bg-gray-800">
+          <div class="relative">
+            <span class="absolute top-2 right-2 bg-[#88d889] text-white text-xs font-bold px-2 py-1 rounded">-30%</span>
+            <img src="/src/images/Samsung-8gb-DDR3-RAM-1600-MHz.png" alt="Samsung RAM" class="w-full h-56 object-contain p-4"/>
+          </div>
+          <div class="p-4 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="text-xs text-[#88d889] font-medium mb-1">Samsung</div>
+              <h3 class="font-semibold mb-2 text-gray-800 dark:text-white">Samsung 8GB DDR3 RAM</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400">1600 MHz Desktop Memory</p>
+            </div>
+            <div class="flex justify-between items-center mt-4">
+              <div>
+                <span class="text-lg font-bold">₹2,099</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400 line-through ml-2">₹2,999</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Samsung 980 SSD -->
+        <div class="product-card rounded-lg overflow-hidden h-[460px] flex flex-col border-2 dark:border-gray-700 border-gray-200 bg-white dark:bg-gray-800">
+          <div class="relative">
+            <span class="absolute top-2 right-2 bg-[#88d889] text-white text-xs font-bold px-2 py-1 rounded">-20%</span>
+            <img src="/src/images/samsung-internal-ssd_980_500gb-from_tpstech.in-main1.png" alt="Samsung SSD" class="w-full h-56 object-contain p-4"/>
+          </div>
+          <div class="p-4 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="text-xs text-[#88d889] font-medium mb-1">Samsung</div>
+              <h3 class="font-semibold mb-2 text-gray-800 dark:text-white">Samsung 980 SSD</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400">500GB NVMe M.2 SSD</p>
+            </div>
+            <div class="flex justify-between items-center mt-4">
+              <div>
+                <span class="text-lg font-bold">₹4,799</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400 line-through ml-2">₹5,999</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Western Digital HDD -->
+        <div class="product-card rounded-lg overflow-hidden h-[460px] flex flex-col border-2 dark:border-gray-700 border-gray-200 bg-white dark:bg-gray-800">
+          <div class="relative">
+            <span class="absolute top-2 right-2 bg-[#88d889] text-white text-xs font-bold px-2 py-1 rounded">-15%</span>
+            <img src="/src/images/1TB-Western-Digital-3.5-inch.png" alt="WD HDD" class="w-full h-56 object-contain p-4"/>
+          </div>
+          <div class="p-4 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="text-xs text-[#88d889] font-medium mb-1">Western Digital</div>
+              <h3 class="font-semibold mb-2 text-gray-800 dark:text-white">Western Digital 1TB HDD</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400">3.5" SATA Hard Drive</p>
+            </div>
+            <div class="flex justify-between items-center mt-4">
+              <div>
+                <span class="text-lg font-bold">₹3,399</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400 line-through ml-2">₹3,999</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- GIGABYTE GTX 1650 -->
+        <div class="product-card rounded-lg overflow-hidden h-[460px] flex flex-col border-2 dark:border-gray-700 border-gray-200 bg-white dark:bg-gray-800">
+          <div class="relative">
+            <span class="absolute top-2 right-2 bg-[#88d889] text-white text-xs font-bold px-2 py-1 rounded">-20%</span>
+            <img src="/src/images/4GB-GDDR6-GIGABYTE-Nvidia-GeForce-GTX-1650-D6-Graphics-Card.png" alt="GTX 1650" class="w-full h-56 object-contain p-4"/>
+          </div>
+          <div class="p-4 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="text-xs text-[#88d889] font-medium mb-1">GIGABYTE</div>
+              <h3 class="font-semibold mb-2 text-gray-800 dark:text-white">GIGABYTE GTX 1650 D6</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400">4GB GDDR6 Graphics Card</p>
+            </div>
+            <div class="flex justify-between items-center mt-4">
+              <div>
+                <span class="text-lg font-bold">₹15,999</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400 line-through ml-2">₹19,999</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+                <button class="bg-[#88d889] text-white p-2 rounded-full hover:bg-[#7ac97b] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="pl-24 bg-white dark:bg-gray-800 backdrop-blur-sm border-t dark:border-gray-700 border-[#88d889]/20 mt-16">
+    <div class="container mx-auto px-4 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
+        <!-- Company Info -->
+        <div>
+          <h3 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white">About Us</h3>
+          <p class="text-gray-600 dark:text-gray-400 mb-4">Your one-stop shop for premium tech and gaming gear. Quality products, competitive prices, excellent service.</p>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+          <h3 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-[#88d889]">About Us</a></li>
+            <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-[#88d889]">Contact</a></li>
+            <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-[#88d889]">Blog</a></li>
+            <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-[#88d889]">FAQs</a></li>
+          </ul>
+        </div>
+
+        <!-- Customer Service -->
+        <div>
+          <h3 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Customer Service</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-[#88d889]">Shipping Policy</a></li>
+            <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-[#88d889]">Returns & Exchanges</a></li>
+            <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-[#88d889]">Terms & Conditions</a></li>
+            <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-[#88d889]">Privacy Policy</a></li>
+          </ul>
+        </div>
+
+        <!-- Legal Links -->
+        <div>
+          <h3 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Legal</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-[#88d889]">Terms</a></li>
+            <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-[#88d889]">Privacy</a></li>
+            <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-[#88d889]">Cookies</a></li>
+          </ul>
+        </div>
+
+        <!-- Newsletter -->
+        <div>
+          <h3 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Stay Updated</h3>
+          <p class="text-gray-600 dark:text-gray-400 mb-4">Subscribe to our newsletter for the latest updates and exclusive offers.</p>
+          <form class="space-y-2">
+            <input type="email" placeholder="Enter your email" class="w-full px-4 py-2 rounded-lg border dark:border-gray-700 border-[#88d889]/20 focus:outline-none focus:border-[#88d889] bg-white dark:bg-gray-800">
+            <button type="submit" class="w-full px-4 py-2 bg-[#88d889] hover:bg-[#78c879] text-white rounded-lg transition-colors">Subscribe</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="border-t border-[#88d889]/20 dark:border-gray-700 mt-8 pt-8">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+          <div class="flex items-center mb-4 md:mb-0">
+            <div class="relative w-16 h-16 bg-black rounded-lg overflow-hidden group transition-transform duration-300 hover:scale-125">
+              <img src="../../src/images/HackWolf.png" 
+                   alt="Wolf Logo" 
+                   class="w-[200%] h-[200%] object-contain absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 group-hover:opacity-0 transition-all duration-300">
+              <img src="../../src/images/HackWolf.gif" 
+                   alt="Wolf Animation" 
+                   class="w-[200%] h-[200%] object-contain absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+            </div>
+            <div class="h-12 w-px bg-[#88d889] mx-3"></div>
+            <div class="flex flex-col justify-center">
+              <h3 class="text-3xl font-bold leading-none text-gray-800 dark:text-white" style="font-family: Verdana, Geneva, Tahoma, sans-serif">ReTech<span class="text-[#88d889]">.</span></h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400 italic">—A HackWolf Initiative</p>
+            </div>
+          </div>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mx-4">&copy; 2025 ReTech. All rights reserved.</p>
+          <div class="flex space-x-4 items-center">
+            <a href="https://facebook.com" class="text-[#88d889] hover:text-[#78c879] transition-all duration-300 hover:scale-110 hover:shadow-lg inline-flex items-center justify-center rounded-full p-2 w-10 h-10">
+              <i class="fa-brands fa-facebook text-2xl"></i>
+            </a>
+            <a href="https://x.com" class="text-[#88d889] hover:text-[#78c879] transition-all duration-300 hover:scale-110 hover:shadow-lg inline-flex items-center justify-center rounded-full p-2 w-10 h-10">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 512 512" fill="currentColor">
+                <path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/>
+              </svg>
+            </a>
+            <a href="https://instagram.com" class="text-[#88d889] hover:text-[#78c879] transition-all duration-300 hover:scale-110 hover:shadow-lg inline-flex items-center justify-center rounded-full p-2 w-10 h-10">
+              <i class="fa-brands fa-instagram text-2xl"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
+
+<script>
+  function toggleDarkMode() {
+    const html = document.documentElement;
+    const isDark = html.classList.contains('dark');
+    const darkModeToggle = document.getElementById('theme-toggle');
+    
+    if (isDark) {
+      html.classList.remove('dark');
+      localStorage.setItem('darkMode', 'light');
+    } else {
+      html.classList.add('dark');
+      localStorage.setItem('darkMode', 'dark');
+    }
+  }
+
+  // Check for saved dark mode preference
+  document.addEventListener('DOMContentLoaded', () => {
+    const darkMode = localStorage.getItem('darkMode');
+    if (darkMode === 'dark') {
+      document.documentElement.classList.add('dark');
+    }
+  });
+</script>

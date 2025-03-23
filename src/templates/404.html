@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page Not Found - ReTech</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" type="image/x-icon" href="/src/static/favicon.ico">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'retech-green': '#88d889',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .animated-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      background: #ffffff;
+      overflow: hidden;
+    }
+    .dark .animated-bg { background: #1a1d23; }
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0;
+    }
+    .particle:nth-child(3n) {
+      width: 10px; height: 10px;
+      background: rgba(136, 216, 137, 0.6);
+      animation: moveTopRight 8s ease-in-out infinite;
+    }
+    .particle:nth-child(3n + 1) {
+      width: 15px; height: 15px;
+      background: rgba(128, 128, 128, 0.4);
+      animation: moveBottomLeft 12s ease-in-out infinite;
+    }
+    .particle:nth-child(3n + 2) {
+      width: 8px; height: 8px;
+      background: rgba(136, 216, 137, 0.3);
+      animation: moveRandom 10s ease-in-out infinite;
+    }
+    @keyframes moveTopRight {
+      0% { transform: translate(0, 100vh) rotate(0deg); opacity: 0; }
+      50% { transform: translate(50vw, 25vh) rotate(180deg); opacity: 0.8; }
+      100% { transform: translate(100vw, 0) rotate(360deg); opacity: 0; }
+    }
+    @keyframes moveBottomLeft {
+      0% { transform: translate(100vw, 0) rotate(0deg); opacity: 0; }
+      50% { transform: translate(50vw, 75vh) rotate(-180deg); opacity: 0.8; }
+      100% { transform: translate(0, 100vh) rotate(-360deg); opacity: 0; }
+    }
+    @keyframes moveRandom {
+      0% { transform: translate(-50px, -50px) rotate(0deg); opacity: 0; }
+      25% { transform: translate(100vw, 25vh) rotate(90deg); opacity: 0.8; }
+      50% { transform: translate(50vw, 100vh) rotate(180deg); opacity: 0.4; }
+      75% { transform: translate(0, 50vh) rotate(270deg); opacity: 0.8; }
+      100% { transform: translate(-50px, -50px) rotate(360deg); opacity: 0; }
+    }
+    .error-text {
+      background: linear-gradient(to right, #88d889, #68b869);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+    .circuit-line {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: drawLine 3s ease-out forwards;
+    }
+    @keyframes drawLine {
+      to { stroke-dashoffset: 0; }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 min-h-screen">
+  <div class="animated-bg">
+    <div class="particle" style="top: 10%; left: 20%;"></div>
+    <div class="particle" style="top: 30%; left: 40%;"></div>
+    <div class="particle" style="top: 50%; left: 60%;"></div>
+    <div class="particle" style="top: 70%; left: 80%;"></div>
+  </div>
+
+  <!-- Header with Dark Mode Toggle -->
+  <header class="fixed top-0 w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-b border-retech-green/20 dark:border-gray-700/50 z-50">
+    <div class="container mx-auto px-4 h-16 flex justify-between items-center">
+      <a href="/" class="flex items-center space-x-2">
+        <span class="text-3xl font-bold text-gray-800 dark:text-white">ReTech<span class="text-retech-green">.</span></span>
+      </a>
+      <button id="darkModeToggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800 dark:text-white block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800 dark:text-white hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 pt-28 pb-12 flex flex-col items-center justify-center min-h-[80vh]">
+    <div class="text-center space-y-8">
+      <!-- 404 Text -->
+      <h1 class="error-text text-9xl font-bold mb-4">404</h1>
+      
+      <!-- Circuit Board SVG -->
+      <div class="w-64 h-64 mx-auto relative">
+        <svg viewBox="0 0 200 200" class="w-full h-full">
+          <path class="circuit-line" fill="none" stroke="#88d889" stroke-width="2"
+            d="M100,20 L100,50 M100,50 C100,50 150,50 150,100 M150,100 L180,100 M100,50 C100,50 50,50 50,100 M50,100 L20,100 M100,150 L100,180 M100,150 C100,150 150,150 150,100 M100,150 C100,150 50,150 50,100"
+          />
+          <circle cx="100" cy="100" r="30" class="fill-retech-green/20 stroke-retech-green" stroke-width="2"/>
+          <circle cx="100" cy="100" r="20" class="fill-retech-green/30 stroke-retech-green" stroke-width="2"/>
+          <circle cx="100" cy="100" r="10" class="fill-retech-green/40 stroke-retech-green" stroke-width="2"/>
+        </svg>
+      </div>
+
+      <!-- Error Message -->
+      <div class="space-y-4">
+        <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Page Not Found</h2>
+        <p class="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
+          Looks like this circuit's disconnected! The page you're looking for might have been moved, deleted, or never existed.
+        </p>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+        <a href="/" class="px-6 py-3 bg-retech-green text-white rounded-lg hover:bg-retech-green/90 transition-colors">
+          Go Home
+        </a>
+        <a href="/shop" class="px-6 py-3 bg-retech-green text-white rounded-lg hover:bg-retech-green/90 transition-colors">
+          Go Shop
+        </a>
+        <button onclick="history.back()" class="px-6 py-3 border border-retech-green text-retech-green rounded-lg hover:bg-retech-green/10 transition-colors">
+          Go Back
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Dark mode toggle
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    
+    function toggleDarkMode() {
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('darkMode', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+    }
+
+    darkModeToggle.addEventListener('click', toggleDarkMode);
+
+    // Check for saved dark mode preference
+    if (localStorage.getItem('darkMode') === 'dark') {
+      document.documentElement.classList.add('dark');
+    }
+  </script>
+</body>
+</html>

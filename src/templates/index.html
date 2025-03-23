@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReTech.</title>
+    <link rel="icon" type="image/x-icon" href="/src/static/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'custom-green': '#88d889',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        html {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
+        .dot {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+        
+        .header-hidden {
+            transform: translateY(-100%);
+        }
+
+        .video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .content-overlay {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.6));
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: #ffffff;
+            overflow: hidden;
+        }
+        .dark .animated-bg { background: #1a1d23; }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0;
+        }
+        .particle:nth-child(3n) {
+            width: 10px; height: 10px;
+            background: rgba(136, 216, 137, 0.6);
+            animation: moveTopRight 8s ease-in-out infinite;
+        }
+        .particle:nth-child(3n + 1) {
+            width: 15px; height: 15px;
+            background: rgba(128, 128, 128, 0.4);
+            animation: moveBottomLeft 12s ease-in-out infinite;
+        }
+        .particle:nth-child(3n + 2) {
+            width: 8px; height: 8px;
+            background: rgba(136, 216, 137, 0.3);
+            animation: moveRandom 10s ease-in-out infinite;
+        }
+        @keyframes moveTopRight {
+            0% { transform: translate(0, 100vh) rotate(0deg); opacity: 0; }
+            50% { transform: translate(50vw, 25vh) rotate(180deg); opacity: 0.8; }
+            100% { transform: translate(100vw, 0) rotate(360deg); opacity: 0; }
+        }
+        @keyframes moveBottomLeft {
+            0% { transform: translate(100vw, 0) rotate(0deg); opacity: 0; }
+            50% { transform: translate(50vw, 75vh) rotate(-180deg); opacity: 0.8; }
+            100% { transform: translate(0, 100vh) rotate(-360deg); opacity: 0; }
+        }
+        @keyframes moveRandom {
+            0% { transform: translate(-50px, -50px) rotate(0deg); opacity: 0; }
+            25% { transform: translate(100vw, 25vh) rotate(90deg); opacity: 0.8; }
+            50% { transform: translate(50vw, 100vh) rotate(180deg); opacity: 0.4; }
+            75% { transform: translate(0, 50vh) rotate(270deg); opacity: 0.8; }
+            100% { transform: translate(-50px, -50px) rotate(360deg); opacity: 0; }
+        }
+
+        .swiper {
+            width: 100%;
+            max-width: 800px;
+            height: 350px;
+            padding: 30px 0;
+            margin: 0 auto;
+        }
+        @media (min-width: 768px) {
+            .swiper {
+                height: 450px;
+                padding: 50px 0;
+            }
+        }
+        .swiper-slide {
+            transition: all 0.3s ease;
+            opacity: 0.4;
+        }
+        .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .swiper-slide-active {
+            transform: scale(1.3);
+            opacity: 1;
+            z-index: 2;
+        }
+        .swiper-button-next, 
+        .swiper-button-prev, 
+        .swiper-pagination {
+            color: #88d889 !important;
+        }
+        .dark .swiper-button-next,
+        .dark .swiper-button-prev,
+        .dark .swiper-pagination {
+            color: #fff !important;
+        }
+        .swiper-button-next::after,
+        .swiper-button-prev::after {
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+</head>
+<body class="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200">
+    <div class="animated-bg">
+        <div class="particle" style="top: 10%; left: 20%;"></div>
+        <div class="particle" style="top: 30%; left: 40%;"></div>
+        <div class="particle" style="top: 50%; left: 60%;"></div>
+        <div class="particle" style="top: 70%; left: 80%;"></div>
+        <div class="particle" style="top: 90%; left: 10%;"></div>
+        <div class="particle" style="top: 20%; left: 50%;"></div>
+        <div class="particle" style="top: 40%; left: 70%;"></div>
+        <div class="particle" style="top: 60%; left: 90%;"></div>
+        <div class="particle" style="top: 80%; left: 20%;"></div>
+        <div class="particle" style="top: 10%; left: 60%;"></div>
+        <div class="particle" style="top: 30%; left: 80%;"></div>
+        <div class="particle" style="top: 50%; left: 10%;"></div>
+        <div class="particle" style="top: 70%; left: 40%;"></div>
+        <div class="particle" style="top: 90%; left: 70%;"></div>
+    </div>
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-b border-white/20 dark:border-gray-700/20 shadow-lg z-50 transition-all duration-300 header-hidden">
+        <div class="container mx-auto px-5 py-5 flex items-center justify-between">
+            <a href="#" class="text-4xl font-bold text-gray-800 dark:text-white">
+                ReTech<span class="dot text-custom-green">.</span>
+            </a>
+            
+            <!-- Mobile buttons -->
+            <div class="lg:hidden flex items-center space-x-4">
+                <button id="mobile-theme-toggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800 dark:text-white hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800 dark:text-white block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </button>
+                <button id="menu-btn" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="hidden lg:flex items-center space-x-8">
+                <a href="#home" class="text-lg text-gray-600 dark:text-gray-300 hover:text-custom-green dark:hover:text-custom-green transition-colors">Home</a>
+                <a href="#about" class="text-lg text-gray-600 dark:text-gray-300 hover:text-custom-green dark:hover:text-custom-green transition-colors">About</a>
+                <a href="#shop" class="text-lg text-gray-600 dark:text-gray-300 hover:text-custom-green dark:hover:text-custom-green transition-colors">Shop</a>
+                <a href="#review" class="text-lg text-gray-600 dark:text-gray-300 hover:text-custom-green dark:hover:text-custom-green transition-colors">Review</a>
+                <a href="#contact" class="text-lg text-gray-600 dark:text-gray-300 hover:text-custom-green dark:hover:text-custom-green transition-colors">Contact</a>
+            </nav>
+            
+            <!-- Icons -->
+            <div class="hidden lg:flex items-center space-x-6">
+                <button id="theme-toggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800 dark:text-white block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800 dark:text-white hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="lg:hidden fixed inset-0 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md z-40 hidden">
+            <div class="container mx-auto px-5 py-4">
+                <div class="flex justify-end mb-8">
+                    <button id="close-menu" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                        <i class="fas fa-times text-2xl"></i>
+                    </button>
+                </div>
+                <nav class="flex flex-col space-y-6">
+                    <a href="#home" class="text-xl text-gray-600 dark:text-gray-300 hover:text-custom-green dark:hover:text-custom-green transition-colors">Home</a>
+                    <a href="#about" class="text-xl text-gray-600 dark:text-gray-300 hover:text-custom-green dark:hover:text-custom-green transition-colors">About</a>
+                    <a href="#shop" class="text-xl text-gray-600 dark:text-gray-300 hover:text-custom-green dark:hover:text-custom-green transition-colors">Shop</a>
+                    <a href="#review" class="text-xl text-gray-600 dark:text-gray-300 hover:text-custom-green dark:hover:text-custom-green transition-colors">Review</a>
+                    <a href="#contact" class="text-xl text-gray-600 dark:text-gray-300 hover:text-custom-green dark:hover:text-custom-green transition-colors">Contact</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Home Section -->
+    <section id="home" class="min-h-screen relative flex items-center">
+        <!-- Video Background -->
+        <video autoplay muted loop playsinline class="video-bg">
+            <source src="/src/videos/Video-background.mp4" type="video/mp4">
+        </video>
+
+        <!-- Content Overlay -->
+        <div class="content-overlay absolute inset-0"></div>
+
+        <!-- Content -->
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="max-w-xl">
+                <h1 class="text-5xl font-bold mb-3 text-white">
+                    ReTech<span class="dot text-custom-green">.</span>
+                </h1>
+                <p class="text-lg text-custom-green mb-3">Get the best deals on your favourite electronics.</p>
+                <p class="text-base text-gray-200 mb-6 leading-relaxed">
+                    Electronic waste is a growing environmental crisis, polluting landfills and harming ecosystems.
+                    We give old tech a new life through refurbishment and recycling, reducing waste and promoting sustainability.
+                </p>
+                <a href="#shop" class="inline-block px-6 py-2 text-lg bg-custom-green text-white rounded-full hover:bg-black hover:text-white transition-all duration-300 hover:scale-105 hover:shadow-lg">
+                    Shop Now
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="min-h-screen py-12 md:py-20 relative">
+        <div class="container mx-auto px-4">
+            <!-- Main content box with glass effect -->
+            <div class="bg-white/30 dark:bg-gray-800/30 backdrop-blur-md rounded-3xl border-2 border-custom-green p-4 md:p-12 shadow-xl">
+                <div class="text-center mb-8 md:mb-16">
+                    <h2 class="text-4xl md:text-6xl font-bold text-gray-600 dark:text-gray-300">About <span class="text-custom-green">Us</span></h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-12 items-start">
+                    <!-- Collage Section - Takes 2 columns on desktop -->
+                    <div class="order-1 md:col-span-2">
+                        <div class="swiper mySwiper">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide"><img src="/src/images/c (1).jpeg" alt="Photo 1" class="rounded-lg"></div>
+                                <div class="swiper-slide"><img src="/src/images/c (2).jpeg" alt="Photo 2" class="rounded-lg"></div>
+                                <div class="swiper-slide"><img src="/src/images/c (3).jpg" alt="Photo 3" class="rounded-lg"></div>
+                                <div class="swiper-slide"><img src="/src/images/c (4).jpg" alt="Photo 4" class="rounded-lg"></div>
+                                <div class="swiper-slide"><img src="/src/images/c (5).jpg" alt="Photo 5" class="rounded-lg"></div>
+                            </div>
+                            <div class="swiper-pagination"></div>
+                            <div class="swiper-button-next hidden md:flex"></div>
+                            <div class="swiper-button-prev hidden md:flex"></div>
+                        </div>
+                    </div>
+
+                    <!-- Content Section - Takes full width on mobile, 1 column on desktop -->
+                    <div class="order-2 mt-8 md:mt-0">
+                        <div class="space-y-6 md:space-y-10">
+                            <div>
+                                <h3 class="text-2xl md:text-3xl font-bold mb-4 md:mb-6 dark:text-gray-200">The <span class="text-custom-green">E-Waste Problem</span>!</h3>
+                                <p class="text-gray-700 dark:text-gray-300 text-base md:text-lg leading-relaxed">
+                                    Electronic waste is a growing environmental crisis, polluting landfills and harming ecosystems.
+                                    We give old tech a new life through refurbishment and recycling, reducing waste and promoting sustainability.
+                                </p>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl md:text-3xl font-bold mb-4 md:mb-6 dark:text-gray-200">How We <span class="text-custom-green">Help</span>?</h3>
+                                <p class="text-gray-700 dark:text-gray-300 text-base md:text-lg leading-relaxed">At ReTech, we collect, refurbish, and resell electronics, extending their life cycle and reducing waste. Our mission is to provide affordable tech while protecting our planet.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shop Section -->
+    <section id="shop" class="min-h-screen py-12 md:py-20 relative">
+        <div class="container mx-auto px-4">
+            <!-- Main content box with glass effect -->
+            <div class="bg-white/30 dark:bg-gray-800/30 backdrop-blur-md rounded-3xl border-2 border-custom-green p-4 md:p-12 shadow-xl">
+                <div class="text-center mb-8 md:mb-16">
+                    <h2 class="text-4xl md:text-6xl font-bold text-gray-600 dark:text-gray-300">Our <span class="text-custom-green">Products</span></h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                    <!-- Product 1 -->
+                    <div class="bg-white/70 dark:bg-gray-900/70 rounded-2xl shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105 backdrop-blur-sm">
+                        <div class="p-4">
+                            <img src="/src/images/IntelPentiumDualCore.png" alt="Intel Pentium Dual Core" class="w-full h-48 object-contain">
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Intel Pentium Dual Core</h3>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">Intel Pentium Dual-Core is a budget dual-core CPU for basic computing.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl font-bold text-custom-green">₹8,499</span>
+                                <button class="bg-custom-green text-white px-6 py-2 rounded-lg hover:bg-custom-green/90 transition-colors">Buy Now</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 2 -->
+                    <div class="bg-white/70 dark:bg-gray-900/70 rounded-2xl shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105 backdrop-blur-sm">
+                        <div class="p-4">
+                            <img src="/src/images/Samsung-8gb-DDR3-RAM-1600-MHz.png" alt="8GB Samsung DDR3 RAM" class="w-full h-48 object-contain">
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">8GB Samsung DDR3 RAM</h3>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">8GB Samsung DDR3 RAM ensures reliable performance for smooth multitasking.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl font-bold text-custom-green">₹4,499</span>
+                                <button class="bg-custom-green text-white px-6 py-2 rounded-lg hover:bg-custom-green/90 transition-colors">Buy Now</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 3 -->
+                    <div class="bg-white/70 dark:bg-gray-900/70 rounded-2xl shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105 backdrop-blur-sm">
+                        <div class="p-4">
+                            <img src="/src/images/Cooler-Master-Sedion-120V.png" alt="CoolerMaster Sedion 120V" class="w-full h-48 object-contain">
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">CoolerMaster Sedion 120V</h3>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">Cooler Master Seidon 120V is a compact and efficient liquid CPU cooler.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-2xl font-bold text-custom-green">₹5,999</span>
+                                <button class="bg-custom-green text-white px-6 py-2 rounded-lg hover:bg-custom-green/90 transition-colors">Buy Now</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-12">
+                    <a href="/shop" class="inline-flex items-center text-custom-green hover:text-custom-green/90 text-lg font-semibold group">
+                        View More 
+                        <i class="fas fa-chevron-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Review Section -->
+    <section id="review" class="min-h-screen py-12 md:py-20 relative">
+        <div class="container mx-auto px-4">
+            <!-- Main content box with glass effect -->
+            <div class="bg-white/30 dark:bg-gray-800/30 backdrop-blur-md rounded-3xl border-2 border-custom-green p-4 md:p-12 shadow-xl">
+                <div class="text-center mb-8 md:mb-16">
+                    <h2 class="text-4xl md:text-6xl font-bold text-gray-600 dark:text-gray-300">Our <span class="text-custom-green">Reviews</span></h2>
+                </div>
+
+                <div class="flex flex-col lg:flex-row gap-8">
+                    <!-- Stats Section -->
+                    <div class="lg:w-1/2">
+                        <div class="grid grid-cols-2 gap-6">
+                            <!-- Reliability -->
+                            <div class="stat-item bg-white/70 dark:bg-gray-900/70 p-6 rounded-2xl backdrop-blur-sm">
+                                <div class="relative w-24 h-24 mx-auto">
+                                    <svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                                        <circle class="text-gray-200 dark:text-gray-700" stroke="currentColor" stroke-width="8" fill="none" cx="50" cy="50" r="42"></circle>
+                                        <circle class="text-custom-green" stroke="currentColor" stroke-width="8" stroke-linecap="round" fill="none"
+                                            stroke-dasharray="264, 264" stroke-dashoffset="66" transform="rotate(180 50 50)" cx="50" cy="50" r="42"></circle>
+                                    </svg>
+                                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                        <i class="fas fa-shield-alt text-2xl text-custom-green"></i>
+                                    </div>
+                                </div>
+                                <div class="text-center mt-4">
+                                    <div class="text-2xl font-bold text-gray-800 dark:text-white mb-1">4.5</div>
+                                    <div class="text-gray-600 dark:text-gray-300 font-medium">Reliability</div>
+                                </div>
+                            </div>
+
+                            <!-- Delivery -->
+                            <div class="stat-item bg-white/70 dark:bg-gray-900/70 p-6 rounded-2xl backdrop-blur-sm">
+                                <div class="relative w-24 h-24 mx-auto">
+                                    <svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                                        <circle class="text-gray-200 dark:text-gray-700" stroke="currentColor" stroke-width="8" fill="none" cx="50" cy="50" r="42"></circle>
+                                        <circle class="text-custom-green" stroke="currentColor" stroke-width="8" stroke-linecap="round" fill="none"
+                                            stroke-dasharray="264, 264" stroke-dashoffset="84" transform="rotate(180 50 50)" cx="50" cy="50" r="42"></circle>
+                                    </svg>
+                                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                        <i class="fas fa-shipping-fast text-2xl text-custom-green"></i>
+                                    </div>
+                                </div>
+                                <div class="text-center mt-4">
+                                    <div class="text-2xl font-bold text-gray-800 dark:text-white mb-1">4.2</div>
+                                    <div class="text-gray-600 dark:text-gray-300 font-medium">Delivery</div>
+                                </div>
+                            </div>
+
+                            <!-- Value for Money -->
+                            <div class="stat-item bg-white/70 dark:bg-gray-900/70 p-6 rounded-2xl backdrop-blur-sm">
+                                <div class="relative w-24 h-24 mx-auto">
+                                    <svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                                        <circle class="text-gray-200 dark:text-gray-700" stroke="currentColor" stroke-width="8" fill="none" cx="50" cy="50" r="42"></circle>
+                                        <circle class="text-custom-green" stroke="currentColor" stroke-width="8" stroke-linecap="round" fill="none"
+                                            stroke-dasharray="264, 264" stroke-dashoffset="26" transform="rotate(180 50 50)" cx="50" cy="50" r="42"></circle>
+                                    </svg>
+                                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                        <i class="fas fa-indian-rupee-sign text-2xl text-custom-green"></i>
+                                    </div>
+                                </div>
+                                <div class="text-center mt-4">
+                                    <div class="text-2xl font-bold text-gray-800 dark:text-white mb-1">4.8</div>
+                                    <div class="text-gray-600 dark:text-gray-300 font-medium">Value for Money</div>
+                                </div>
+                            </div>
+
+                            <!-- Eco-Friendliness -->
+                            <div class="stat-item bg-white/70 dark:bg-gray-900/70 p-6 rounded-2xl backdrop-blur-sm">
+                                <div class="relative w-24 h-24 mx-auto">
+                                    <svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                                        <circle class="text-gray-200 dark:text-gray-700" stroke="currentColor" stroke-width="8" fill="none" cx="50" cy="50" r="42"></circle>
+                                        <circle class="text-custom-green" stroke="currentColor" stroke-width="8" stroke-linecap="round" fill="none"
+                                            stroke-dasharray="264, 264" stroke-dashoffset="39" transform="rotate(180 50 50)" cx="50" cy="50" r="42"></circle>
+                                    </svg>
+                                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                        <i class="fas fa-leaf text-2xl text-custom-green"></i>
+                                    </div>
+                                </div>
+                                <div class="text-center mt-4">
+                                    <div class="text-2xl font-bold text-gray-800 dark:text-white mb-1">4.7</div>
+                                    <div class="text-gray-600 dark:text-gray-300 font-medium">Eco-Friendliness</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reviews Section -->
+                    <div class="lg:w-1/2 lg:border-l-2 lg:border-custom-green/30 lg:pl-8">
+                        <div class="h-[440px] overflow-hidden relative">
+                            <div class="review-wrapper space-y-6 absolute w-full">
+                                <!-- Review 1 -->
+                                <div class="review bg-white/70 dark:bg-gray-900/70 p-6 rounded-2xl backdrop-blur-sm border-2 border-custom-green/20 hover:border-custom-green/40 transition-colors">
+                                    <div class="flex items-center mb-4">
+                                        <div class="w-12 h-12 bg-custom-green text-white rounded-full flex items-center justify-center text-xl font-bold">PR</div>
+                                        <div class="ml-4">
+                                            <h3 class="text-lg font-bold text-gray-800 dark:text-white">Praval Rasotra</h3>
+                                            <p class="text-gray-600 dark:text-gray-400">IT Professional</p>
+                                        </div>
+                                        <div class="ml-auto text-custom-green">★★★★★</div>
+                                    </div>
+                                    <p class="text-gray-600 dark:text-gray-300">"Great prices, excellent quality—ReTech is a game-changer for tech enthusiasts!"</p>
+                                </div>
+
+                                <!-- Review 2 -->
+                                <div class="review bg-white/70 dark:bg-gray-900/70 p-6 rounded-2xl backdrop-blur-sm border-2 border-custom-green/20 hover:border-custom-green/40 transition-colors">
+                                    <div class="flex items-center mb-4">
+                                        <div class="w-12 h-12 bg-custom-green text-white rounded-full flex items-center justify-center text-xl font-bold">DC</div>
+                                        <div class="ml-4">
+                                            <h3 class="text-lg font-bold text-gray-800 dark:text-white">Daksh Chowdhary</h3>
+                                            <p class="text-gray-600 dark:text-gray-400">Student</p>
+                                        </div>
+                                        <div class="ml-auto text-custom-green">★★★★☆</div>
+                                    </div>
+                                    <p class="text-gray-600 dark:text-gray-300">"Saved a ton on my PC build with ReTech—highly recommend!"</p>
+                                </div>
+
+                                <!-- Review 3 -->
+                                <div class="review bg-white/70 dark:bg-gray-900/70 p-6 rounded-2xl backdrop-blur-sm border-2 border-custom-green/20 hover:border-custom-green/40 transition-colors">
+                                    <div class="flex items-center mb-4">
+                                        <div class="w-12 h-12 bg-custom-green text-white rounded-full flex items-center justify-center text-xl font-bold">AD</div>
+                                        <div class="ml-4">
+                                            <h3 class="text-lg font-bold text-gray-800 dark:text-white">Arush Dishal</h3>
+                                            <p class="text-gray-600 dark:text-gray-400">IT Professional</p>
+                                        </div>
+                                        <div class="ml-auto text-custom-green">★★★★☆</div>
+                                    </div>
+                                    <p class="text-gray-600 dark:text-gray-300">"Smooth experience, but I'd love to see more variety in stock."</p>
+                                </div>
+
+                                <!-- Review 4 -->
+                                <div class="review bg-white/70 dark:bg-gray-900/70 p-6 rounded-2xl backdrop-blur-sm border-2 border-custom-green/20 hover:border-custom-green/40 transition-colors">
+                                    <div class="flex items-center mb-4">
+                                        <div class="w-12 h-12 bg-custom-green text-white rounded-full flex items-center justify-center text-xl font-bold">HB</div>
+                                        <div class="ml-4">
+                                            <h3 class="text-lg font-bold text-gray-800 dark:text-white">Harishab Bhandari</h3>
+                                            <p class="text-gray-600 dark:text-gray-400">Engineer</p>
+                                        </div>
+                                        <div class="ml-auto text-custom-green">★★★★★</div>
+                                    </div>
+                                    <p class="text-gray-600 dark:text-gray-300">"Eco-friendly and budget-friendly—ReTech is the future of sustainable tech!"</p>
+                                </div>
+
+                                <!-- Review 5 -->
+                                <div class="review bg-white/70 dark:bg-gray-900/70 p-6 rounded-2xl backdrop-blur-sm border-2 border-custom-green/20 hover:border-custom-green/40 transition-colors">
+                                    <div class="flex items-center mb-4">
+                                        <div class="w-12 h-12 bg-custom-green text-white rounded-full flex items-center justify-center text-xl font-bold">AT</div>
+                                        <div class="ml-4">
+                                            <h3 class="text-lg font-bold text-gray-800 dark:text-white">Akshar Thakur</h3>
+                                            <p class="text-gray-600 dark:text-gray-400">Tech Enthusiast</p>
+                                        </div>
+                                        <div class="ml-auto text-custom-green">★★★★★</div>
+                                    </div>
+                                    <p class="text-gray-600 dark:text-gray-300">"ReTech made it easy to upgrade my PC without breaking the bank. Highly recommended!"</p>
+                                </div>
+
+                                <!-- Review 6 -->
+                                <div class="review bg-white/70 dark:bg-gray-900/70 p-6 rounded-2xl backdrop-blur-sm border-2 border-custom-green/20 hover:border-custom-green/40 transition-colors">
+                                    <div class="flex items-center mb-4">
+                                        <div class="w-12 h-12 bg-custom-green text-white rounded-full flex items-center justify-center text-xl font-bold">BS</div>
+                                        <div class="ml-4">
+                                            <h3 class="text-lg font-bold text-gray-800 dark:text-white">Bhavani Sharma</h3>
+                                            <p class="text-gray-600 dark:text-gray-400">Gamer</p>
+                                        </div>
+                                        <div class="ml-auto text-custom-green">★★★★☆</div>
+                                    </div>
+                                    <p class="text-gray-600 dark:text-gray-300">"Great deals on GPUs! My only wish is for faster shipping, but overall a great experience."</p>
+                                </div>
+
+                                <!-- Review 7 -->
+                                <div class="review bg-white/70 dark:bg-gray-900/70 p-6 rounded-2xl backdrop-blur-sm border-2 border-custom-green/20 hover:border-custom-green/40 transition-colors">
+                                    <div class="flex items-center mb-4">
+                                        <div class="w-12 h-12 bg-custom-green text-white rounded-full flex items-center justify-center text-xl font-bold">AB</div>
+                                        <div class="ml-4">
+                                            <h3 class="text-lg font-bold text-gray-800 dark:text-white">Ayush Bhat</h3>
+                                            <p class="text-gray-600 dark:text-gray-400">IT Specialist</p>
+                                        </div>
+                                        <div class="ml-auto text-custom-green">★★★★★</div>
+                                    </div>
+                                    <p class="text-gray-600 dark:text-gray-300">"Top-notch customer support and high-quality parts at affordable prices. Love it!"</p>
+                                </div>
+
+                                <!-- Review 8 -->
+                                <div class="review bg-white/70 dark:bg-gray-900/70 p-6 rounded-2xl backdrop-blur-sm border-2 border-custom-green/20 hover:border-custom-green/40 transition-colors">
+                                    <div class="flex items-center mb-4">
+                                        <div class="w-12 h-12 bg-custom-green text-white rounded-full flex items-center justify-center text-xl font-bold">AK</div>
+                                        <div class="ml-4">
+                                            <h3 class="text-lg font-bold text-gray-800 dark:text-white">Arjun Kundan</h3>
+                                            <p class="text-gray-600 dark:text-gray-400">Freelance Developer</p>
+                                        </div>
+                                        <div class="ml-auto text-custom-green">★★★★★</div>
+                                    </div>
+                                    <p class="text-gray-600 dark:text-gray-300">"ReTech helped me build a powerful workstation at a fraction of the cost. Fantastic service!"</p>
+                                </div>
+
+                                <!-- Review 9 -->
+                                <div class="review bg-white/70 dark:bg-gray-900/70 p-6 rounded-2xl backdrop-blur-sm border-2 border-custom-green/20 hover:border-custom-green/40 transition-colors">
+                                    <div class="flex items-center mb-4">
+                                        <div class="w-12 h-12 bg-custom-green text-white rounded-full flex items-center justify-center text-xl font-bold">AK</div>
+                                        <div class="ml-4">
+                                            <h3 class="text-lg font-bold text-gray-800 dark:text-white">Aditi Katara</h3>
+                                            <p class="text-gray-600 dark:text-gray-400">Student</p>
+                                        </div>
+                                        <div class="ml-auto text-custom-green">★★★★☆</div>
+                                    </div>
+                                    <p class="text-gray-600 dark:text-gray-300">"A great way for students to get affordable tech! The site could be a bit more user-friendly."</p>
+                                </div>
+
+                                <!-- Duplicate first review for smooth loop -->
+                                <div class="review bg-white/70 dark:bg-gray-900/70 p-6 rounded-2xl backdrop-blur-sm border-2 border-custom-green/20 hover:border-custom-green/40 transition-colors">
+                                    <div class="flex items-center mb-4">
+                                        <div class="w-12 h-12 bg-custom-green text-white rounded-full flex items-center justify-center text-xl font-bold">PR</div>
+                                        <div class="ml-4">
+                                            <h3 class="text-lg font-bold text-gray-800 dark:text-white">Praval Rasotra</h3>
+                                            <p class="text-gray-600 dark:text-gray-400">IT Professional</p>
+                                        </div>
+                                        <div class="ml-auto text-custom-green">★★★★★</div>
+                                    </div>
+                                    <p class="text-gray-600 dark:text-gray-300">"Great prices, excellent quality—ReTech is a game-changer for tech enthusiasts!"</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Us Section -->
+    <section id="contact" class="min-h-screen py-12 md:py-20 relative">
+        <div class="container mx-auto px-4">
+            <div class="bg-white/30 dark:bg-gray-800/30 backdrop-blur-md rounded-3xl border-2 border-custom-green p-4 md:p-12 shadow-xl">
+                <div class="text-center mb-8 md:mb-16">
+                    <h2 class="text-4xl md:text-6xl font-bold text-gray-600 dark:text-gray-300">Contact <span class="text-custom-green">Us</span></h2>
+                </div>
+                <div class="flex flex-col lg:flex-row gap-12 items-center">
+                    <div class="lg:w-1/2 space-y-4">
+                        <h3 class="text-2xl font-bold text-gray-800 dark:text-white">Got questions? <span class="text-custom-green">Need tech help?</span></h3>
+                        <p class="text-gray-600 dark:text-gray-400 text-lg">Reach out— we're here to make second-hand feel like first-class!</p>
+                    </div>
+                    <div class="lg:w-1/2">
+                        <form class="space-y-6 bg-white/80 dark:bg-gray-800/80 p-8 rounded-2xl backdrop-blur-sm border-2 border-custom-green/20 max-w-md mx-auto">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Name</label>
+                                <input required type="text" id="name" name="name" 
+                                    class="w-full px-4 py-2 rounded-lg border-2 border-gray-200 dark:border-gray-700 focus:border-custom-green dark:focus:border-custom-green bg-white dark:bg-gray-900 text-gray-800 dark:text-white">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
+                                <input required type="email" id="email" name="email" 
+                                    class="w-full px-4 py-2 rounded-lg border-2 border-gray-200 dark:border-gray-700 focus:border-custom-green dark:focus:border-custom-green bg-white dark:bg-gray-900 text-gray-800 dark:text-white">
+                            </div>
+                            <div>
+                                <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">How Can We Help You?</label>
+                                <textarea required id="message" name="message" rows="4"
+                                    class="w-full px-4 py-2 rounded-lg border-2 border-gray-200 dark:border-gray-700 focus:border-custom-green dark:focus:border-custom-green bg-white dark:bg-gray-900 text-gray-800 dark:text-white"></textarea>
+                            </div>
+                            <button type="submit" 
+                                class="w-full bg-custom-green hover:bg-custom-green/90 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                                Submit
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-16 border-t border-custom-green/20 dark:border-gray-700 pt-8">
+        <div class="container mx-auto px-6">
+            <!-- Bottom Bar -->
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <div class="relative w-16 h-16 bg-black rounded-lg overflow-hidden group transition-transform duration-300 hover:scale-125">
+                        <img src="../../src/images/HackWolf.png" 
+                            alt="Wolf Logo" 
+                            class="w-[200%] h-[200%] object-contain absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 group-hover:opacity-0 transition-all duration-300">
+                        <img src="../../src/images/HackWolf.gif" 
+                            alt="Wolf Animation" 
+                            class="w-[200%] h-[200%] object-contain absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    </div>
+                    <div class="h-12 w-px bg-custom-green mx-3"></div>
+                    <div class="flex flex-col justify-center">
+                        <h3 class="text-3xl font-bold leading-none text-gray-800 dark:text-white" style="font-family: Verdana, Geneva, Tahoma, sans-serif">ReTech<span class="text-custom-green">.</span></h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 italic">—A HackWolf Initiative</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mx-4">&copy; 2025 ReTech. All rights reserved.</p>
+                <div class="flex space-x-4">
+                    <a href="https://facebook.com" class="text-custom-green hover:text-custom-green/90 transition-all duration-300 hover:scale-110 hover:shadow-lg inline-block rounded-full p-2">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    </a>
+                    <a href="https://twitter.com" class="text-custom-green hover:text-custom-green/90 transition-all duration-300 hover:scale-110 hover:shadow-lg inline-block rounded-full p-2">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                    <a href="https://instagram.com" class="text-custom-green hover:text-custom-green/90 transition-all duration-300 hover:scale-110 hover:shadow-lg inline-block rounded-full p-2">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M16.98 0a6.9 6.9 0 0 1 5.08 1.98A6.94 6.94 0 0 1 24 7.02v9.96c0 2.08-.68 3.87-1.98 5.13A7.14 7.14 0 0 1 16.94 24H7.06a7.06 7.06 0 0 1-5.03-1.89A6.96 6.96 0 0 1 0 16.94V7.02C0 2.8 2.8 0 7.02 0h9.96zm.05 2.23H7.06c-1.45 0-2.7.43-3.53 1.25a4.82 4.82 0 0 0-1.3 3.54v9.92c0 1.5.43 2.7 1.3 3.58a5 5 0 0 0 3.53 1.25h9.88a5 5 0 0 0 3.53-1.25 4.73 4.73 0 0 0 1.4-3.54V7.02a5 5 0 0 0-1.3-3.49 4.82 4.82 0 0 0-3.54-1.3zM12 5.76c3.39 0 6.2 2.8 6.2 6.2a6.2 6.2 0 0 1-12.4 0 6.2 6.2 0 0 1 6.2-6.2zm0 2.22a3.99 3.99 0 0 0-3.97 3.97A3.99 3.99 0 0 0 12 15.92a3.99 3.99 0 0 0 3.97-3.97A3.99 3.99 0 0 0 12 7.98zm6.44-3.77a1.4 1.4 0 1 1 0 2.8 1.4 1.4 0 0 1 0-2.8z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script>
+        // Initialize Swiper
+        var swiper = new Swiper(".mySwiper", {
+            loop: true,
+            centeredSlides: true,
+            slidesPerView: 1.8,
+            spaceBetween: 30,
+            effect: "coverflow",
+            coverflowEffect: {
+                rotate: 0,
+                stretch: 0,
+                depth: 100,
+                modifier: 2,
+                slideShadows: false,
+            },
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            }
+        });
+    </script>
+
+    <script>
+        // Mobile menu toggle
+        const menuBtn = document.getElementById('menu-btn');
+        const closeBtn = document.getElementById('close-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.remove('hidden');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+        });
+
+        // Make mobile theme toggle work the same as desktop
+        mobileThemeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            mobileMenu.classList.add('hidden'); // Close menu after toggling theme
+        });
+    </script>
+
+    <script>
+        // Header scroll effect
+        const header = document.querySelector('header');
+        let lastScroll = 0;
+        const homeSection = document.getElementById('home');
+        const homeSectionBottom = homeSection.offsetTop + homeSection.offsetHeight;
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            // Show header only after scrolling past home section
+            if (currentScroll > homeSectionBottom - 100) {
+                header.classList.remove('header-hidden');
+                header.classList.add('shadow-md');
+            } else {
+                header.classList.add('header-hidden');
+                header.classList.remove('shadow-md');
+            }
+            
+            lastScroll = currentScroll;
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Close mobile menu if open
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+
+        // Check for saved theme preference
+        if (localStorage.getItem('theme') === 'dark' || 
+            (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        }
+
+        // Theme toggle functionality
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            
+            // Update localStorage
+            if (html.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
+
+    <script>
+        // Reviews vertical loop
+        document.addEventListener('DOMContentLoaded', function() {
+            const wrapper = document.querySelector(".review-wrapper");
+            const reviews = document.querySelectorAll(".review");
+            let currentIndex = 0;
+            let intervalId;
+            let isPaused = false;
+
+            function moveSlider() {
+                if (isPaused) return;
+                
+                currentIndex++;
+                const reviewHeight = reviews[0].offsetHeight + 24; // Review height + margin (space-y-6 = 1.5rem = 24px)
+                wrapper.style.transition = "transform 0.5s ease-in-out";
+                wrapper.style.transform = `translateY(${-currentIndex * reviewHeight}px)`;
+
+                if (currentIndex >= reviews.length - 1) {
+                    setTimeout(() => {
+                        wrapper.style.transition = "none";
+                        wrapper.style.transform = "translateY(0)";
+                        currentIndex = 0;
+                    }, 500);
+                }
+            }
+
+            // Start the loop
+            function startSlider() {
+                intervalId = setInterval(moveSlider, 5000);
+            }
+
+            // Pause on hover
+            wrapper.addEventListener('mouseenter', () => {
+                isPaused = true;
+                clearInterval(intervalId);
+            });
+
+            // Resume on mouse leave
+            wrapper.addEventListener('mouseleave', () => {
+                isPaused = false;
+                startSlider();
+            });
+
+            // Initial start
+            startSlider();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - ReTech</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'retech-green': '#88d889',
+          },
+          fontFamily: {
+            'poppins': ['Poppins', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .auth-card {
+      backdrop-filter: blur(10px);
+      background-color: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(136, 216, 137, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    }
+
+    .dark .auth-card {
+      background-color: rgba(31, 41, 55, 0.95);
+      border-color: rgba(136, 216, 137, 0.1);
+    }
+
+    .auth-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(136, 216, 137, 0.1);
+    }
+
+    .dark .auth-card:hover {
+      box-shadow: 0 10px 20px rgba(136, 216, 137, 0.05);
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9CA3AF;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 3rem;
+      border-radius: 0.5rem;
+      border: 1px solid #E5E7EB;
+      background-color: rgba(255, 255, 255, 0.8);
+      transition: all 0.2s ease;
+      color: #1F2937;
+    }
+
+    .dark .form-input {
+      background-color: rgba(17, 24, 39, 0.8);
+      border-color: rgba(75, 85, 99, 0.4);
+      color: #F3F4F6;
+    }
+
+    .dark .form-input::placeholder {
+      color: #9CA3AF;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: transparent;
+      box-shadow: 0 0 0 2px #88d889;
+    }
+
+    .dark .form-input:focus {
+      box-shadow: 0 0 0 2px rgba(136, 216, 137, 0.5);
+    }
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    html {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+
+    .logo-dot {
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+    .animated-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -2;
+        background: #ffffff;
+        overflow: hidden;
+    }
+    .dark .animated-bg { background: #1a1d23; }
+    .particle {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0;
+    }
+    .particle:nth-child(3n) {
+        width: 10px; height: 10px;
+        background: rgba(136, 216, 137, 0.6);
+        animation: moveTopRight 8s ease-in-out infinite;
+    }
+    .particle:nth-child(3n + 1) {
+        width: 15px; height: 15px;
+        background: rgba(128, 128, 128, 0.4);
+        animation: moveBottomLeft 12s ease-in-out infinite;
+    }
+    .particle:nth-child(3n + 2) {
+        width: 8px; height: 8px;
+        background: rgba(136, 216, 137, 0.3);
+        animation: moveRandom 10s ease-in-out infinite;
+    }
+    @keyframes moveTopRight {
+        0% { transform: translate(0, 100vh) rotate(0deg); opacity: 0; }
+        50% { transform: translate(50vw, 25vh) rotate(180deg); opacity: 0.8; }
+        100% { transform: translate(100vw, 0) rotate(360deg); opacity: 0; }
+    }
+    @keyframes moveBottomLeft {
+        0% { transform: translate(100vw, 0) rotate(0deg); opacity: 0; }
+        50% { transform: translate(50vw, 75vh) rotate(-180deg); opacity: 0.8; }
+        100% { transform: translate(0, 100vh) rotate(-360deg); opacity: 0; }
+    }
+    @keyframes moveRandom {
+        0% { transform: translate(-50px, -50px) rotate(0deg); opacity: 0; }
+        25% { transform: translate(100vw, 25vh) rotate(90deg); opacity: 0.8; }
+        50% { transform: translate(50vw, 100vh) rotate(180deg); opacity: 0.4; }
+        75% { transform: translate(0, 50vh) rotate(270deg); opacity: 0.8; }
+        100% { transform: translate(-50px, -50px) rotate(360deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 min-h-screen font-poppins">
+  <div class="animated-bg">
+    <div class="particle" style="top: 10%; left: 20%;"></div>
+    <div class="particle" style="top: 30%; left: 40%;"></div>
+    <div class="particle" style="top: 50%; left: 60%;"></div>
+    <div class="particle" style="top: 70%; left: 80%;"></div>
+  </div>
+  <!-- Header with Dark Mode Toggle -->
+  <header class="fixed top-0 w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-b border-retech-green/20 dark:border-gray-700/50 z-50">
+    <div class="container mx-auto px-4 h-16 flex justify-between items-center">
+      <a href="/" class="flex items-center space-x-2">
+        <span class="text-2xl font-bold text-gray-800 dark:text-white">ReTech<span class="logo-dot text-retech-green">.</span></span>
+      </a>
+      <button id="darkModeToggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800 dark:text-white block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800 dark:text-white hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 pt-28 pb-12">
+    <div class="max-w-md mx-auto">
+      <!-- Login Card -->
+      <div class="auth-card p-8 rounded-2xl">
+        <div class="text-center mb-8">
+          <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Welcome Back</h1>
+          <p class="text-gray-600 dark:text-gray-400 mt-2">Please login to your account</p>
+        </div>
+
+        <form id="loginForm" class="space-y-6" method="POST" action="{{ url_for('login') }}">
+          <!-- Username Input -->
+          <div class="relative">
+            <i class="fas fa-user input-icon"></i>
+            <input type="text" name="username" placeholder="Username" required class="form-input">
+          </div>
+
+          <!-- Password Input -->
+          <div class="relative">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" name="password" placeholder="Password" required class="form-input" id="passwordInput">
+            <button type="button" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" onclick="togglePassword()">
+              <i class="fas fa-eye" id="passwordToggleIcon"></i>
+            </button>
+          </div>
+
+          {% if error %}
+          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <span class="block sm:inline">{{ error }}</span>
+          </div>
+          {% endif %}
+
+          <!-- Login Button -->
+          <button type="submit" class="w-full py-3 bg-retech-green text-white rounded-lg hover:bg-[#77c777] 
+                                   transform transition-all duration-200 hover:scale-[1.02] focus:ring-2 focus:ring-offset-2 
+                                   focus:ring-retech-green focus:outline-none">
+            Login
+          </button>
+
+          <!-- Social Login -->
+          <div class="relative my-6">
+            <div class="absolute inset-0 flex items-center">
+              <div class="w-full border-t border-gray-300 dark:border-gray-700"></div>
+            </div>
+            <div class="relative flex justify-center text-sm">
+              <span class="px-2 bg-white dark:bg-gray-800 text-gray-500">Or continue with</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <button type="button" class="flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-700 
+                                       rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+              <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="h-5 w-5 mr-2">
+              <span class="text-sm text-gray-800 dark:text-white">Google</span>
+            </button>
+            <button type="button" class="flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-700 
+                                       rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+              <i class="fab fa-github text-xl mr-2"></i>
+              <span class="text-sm text-gray-800 dark:text-white">GitHub</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Sign Up Link -->
+        <p class="text-center mt-8 text-sm text-gray-600 dark:text-gray-400">
+          Don't have an account? 
+          <a href="/signup" class="text-retech-green hover:text-green-600 dark:hover:text-green-400 font-medium">
+            Create account
+          </a>
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Dark mode toggle
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const html = document.documentElement;
+
+    function toggleDarkMode() {
+      html.classList.toggle('dark');
+      localStorage.setItem('darkMode', html.classList.contains('dark') ? 'dark' : 'light');
+    }
+
+    darkModeToggle.addEventListener('click', toggleDarkMode);
+
+    // Check for saved dark mode preference
+    if (localStorage.getItem('darkMode') === 'dark') {
+      html.classList.add('dark');
+    }
+
+    // Password visibility toggle
+    function togglePassword() {
+      const passwordInput = document.getElementById('passwordInput');
+      const passwordToggleIcon = document.getElementById('passwordToggleIcon');
+      
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        passwordToggleIcon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        passwordInput.type = 'password';
+        passwordToggleIcon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const darkModeToggle = document.getElementById('darkModeToggle');
+      darkModeToggle.addEventListener('click', toggleDarkMode);
+
+      // Check for saved dark mode preference
+      if (localStorage.getItem('darkMode') === 'dark') {
+        document.documentElement.classList.add('dark');
+      }
+    });
+  </script>
+</body>
+</html>
